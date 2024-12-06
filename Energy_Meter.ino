@@ -10,8 +10,8 @@ Adafruit_SH1106 display(OLED_RESET);      //}
 const int voltagePin = A0;                // Voltage sensor connected to A0 pin
 const int currentPin = A1;                // Current sensor connected to A1 pin on Arduino board
 
-const float voltageDividerRatio = 0.0325; // Vout = Vin*{R2/(R1+R2)} Adjust based on your voltage divider (to read both vol. and Amp. single current sensor enough )
-                                          // in our problem statement vout=100V; Vin=3.3V: suppose if R1=1K_Ohm then R2=31K_Ohm; Vol_Divide_Ratio = R1 / R2
+const float voltageDividerRatio = 0.0435; // Vout = Vin*{R2/(R1+R2)} Adjust based on your voltage divider (to read both vol. and Amp. single current sensor enough )
+                                          // considered household supply voltage vout=120V; Arduino acceptable volatege Vin = 5V; suppose if R2 =1K_Ohm then R1 =23K_Ohm; Vol_Divide_Ratio = R1 / R2
 const float currentSensitivity = 0.1;     // ACS712 (current sensor) sensitivity (V/A) 
 
 unsigned long previous_time= 86400000 ;          // (normally set to 0 ) this defines previous completed time period
@@ -22,14 +22,14 @@ float TotalCost = 0;                      // No.of kWhs*Cost per kWh
 
 void setup() {                            // Initialize Serial OLED
   Serial.begin(9600);
-  display.begin(SH1106_I2C_ADDRESS, 0x3C);    //use I2C address as  0x3C or 0x3D 
+  display.begin(SH1106_I2C_ADDRESS, 0x3C);//use I2C address as  0x3C or 0x3D 
   display.clearDisplay();
   display.display();
                                           // Display welcome message
   display.setTextSize(1);                 //}
   display.setTextColor(WHITE);            //} set text color and text size
   display.setCursor(15, 0);                 
-  display.println("POWER METER for");         //} mention
+  display.println("ENERGY METER for");         //} mention
   display.setCursor(0, 10);               //} co-ordinates 
   display.println(" Household/Industry "); //} from
   display.setCursor(50, 20);              //} where
@@ -45,7 +45,7 @@ void loop() {
   if (current_time - previous_time >= interval_time) {
     previous_time = current_time;         // calculate Vol. Current power and energy for time period of a 15 Days
                                           // Read voltage and current
-    float PanelVoltage = analogRead(voltagePin) * (3.3 / 1023.0) / voltageDividerRatio;
+    float PanelVoltage = analogRead(voltagePin) * (4.35 / 1023.0) / voltageDividerRatio;
     float PanelCurrent = (analogRead(currentPin) * (3.3 / 1023.0) - 2.5) / currentSensitivity;
                                           
     float Power = PanelVoltage * PanelCurrent;       // Calculate power in WTs
